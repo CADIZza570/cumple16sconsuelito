@@ -1,0 +1,576 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Feliz Cumple Consuelito 🎂</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Lato:wght@300;400&display=swap');
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      background: linear-gradient(160deg, #0f0220 0%, #2d0a5e 40%, #1a0533 70%, #0f0220 100%);
+      min-height: 100vh;
+      font-family: 'Lato', sans-serif;
+      color: white;
+      overflow-x: hidden;
+    }
+
+    /* ── Stars ── */
+    .stars {
+      position: fixed; inset: 0;
+      pointer-events: none; z-index: 0; overflow: hidden;
+    }
+    .star {
+      position: absolute; border-radius: 50%; background: white;
+      animation: twinkle 3s infinite alternate;
+    }
+    @keyframes twinkle {
+      from { opacity: 0.15; transform: scale(1); }
+      to   { opacity: 0.9;  transform: scale(1.6); }
+    }
+
+    /* ── Floating petals ── */
+    .petal {
+      position: fixed;
+      pointer-events: none; z-index: 0;
+      font-size: 1.2rem;
+      animation: floatUp linear infinite;
+      opacity: 0;
+    }
+    @keyframes floatUp {
+      0%   { transform: translateY(110vh) rotate(0deg);   opacity: 0; }
+      10%  { opacity: 0.7; }
+      90%  { opacity: 0.5; }
+      100% { transform: translateY(-10vh) rotate(360deg); opacity: 0; }
+    }
+
+    /* ── Sparkle click ── */
+    .sparkle {
+      position: fixed; pointer-events: none; z-index: 9999;
+      font-size: 1.2rem;
+      animation: sparkleAnim 0.8s ease-out forwards;
+    }
+    @keyframes sparkleAnim {
+      0%   { opacity: 1; transform: scale(0) translateY(0); }
+      50%  { opacity: 1; transform: scale(1.4) translateY(-20px); }
+      100% { opacity: 0; transform: scale(0.5) translateY(-40px); }
+    }
+
+    /* ── Hero ── */
+    .hero {
+      position: relative; z-index: 1;
+      text-align: center;
+      padding: 70px 20px 50px;
+    }
+    .hero-emoji { font-size: 4rem; display: block; margin-bottom: 10px; animation: pulse 2s ease-in-out infinite; }
+    @keyframes pulse { 0%,100% { transform: scale(1); } 50% { transform: scale(1.12); } }
+
+    .hero h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(2.2rem, 7vw, 4.5rem);
+      background: linear-gradient(90deg, #f9a8d4, #e879f9, #a78bfa, #7dd3fc, #f9a8d4);
+      background-size: 300%;
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      animation: shimmer 4s linear infinite;
+      letter-spacing: 3px;
+    }
+    @keyframes shimmer { from { background-position: 0%; } to { background-position: 300%; } }
+
+    .hero-sub {
+      margin-top: 14px; font-size: 1.15rem;
+      color: #e9d5ff; opacity: 0.85; letter-spacing: 1px;
+      font-family: 'Playfair Display', serif; font-style: italic;
+    }
+    .hero-badge {
+      display: inline-flex; align-items: center; gap: 10px;
+      margin-top: 22px; padding: 10px 32px;
+      border: 2px solid rgba(232,121,249,0.6);
+      border-radius: 999px; font-size: 1.3rem; color: #f0abfc;
+      letter-spacing: 5px;
+      background: rgba(232,121,249,0.08);
+      backdrop-filter: blur(6px);
+    }
+
+    /* ── Divider quote ── */
+    .quote-divider {
+      position: relative; z-index: 1;
+      text-align: center;
+      padding: 50px 24px;
+      max-width: 700px;
+      margin: 0 auto;
+    }
+    .quote-divider blockquote {
+      font-family: 'Playfair Display', serif;
+      font-style: italic;
+      font-size: clamp(1.1rem, 2.5vw, 1.5rem);
+      line-height: 1.7;
+      color: #ddd6fe;
+    }
+    .quote-divider cite {
+      display: block; margin-top: 14px;
+      font-size: 0.85rem; letter-spacing: 3px;
+      color: #c084fc; text-transform: uppercase;
+    }
+    .quote-line {
+      width: 60px; height: 2px;
+      background: linear-gradient(90deg, transparent, #e879f9, transparent);
+      margin: 18px auto 0;
+    }
+
+    /* ── Gallery ── */
+    .gallery {
+      position: relative; z-index: 1;
+      max-width: 1200px;
+      margin: 10px auto 20px;
+      padding: 0 16px;
+      columns: 3; column-gap: 14px;
+    }
+    @media (max-width: 768px) { .gallery { columns: 2; } }
+    @media (max-width: 480px) { .gallery { columns: 1; } }
+
+    .section-title {
+      position: relative; z-index: 1;
+      text-align: center;
+      font-size: 0.85rem; letter-spacing: 5px;
+      text-transform: uppercase; color: #d8b4fe;
+      margin-bottom: 28px; opacity: 0.75;
+    }
+
+    .photo-wrap {
+      break-inside: avoid; margin-bottom: 14px;
+      border-radius: 18px; overflow: hidden;
+      cursor: pointer; position: relative;
+      box-shadow: 0 4px 20px rgba(232,121,249,0.2);
+      transition: transform 0.35s ease, box-shadow 0.35s ease;
+    }
+    .photo-wrap:hover {
+      transform: scale(1.04) rotate(0.5deg);
+      box-shadow: 0 10px 36px rgba(232,121,249,0.55);
+    }
+    .photo-wrap img { width: 100%; display: block; border-radius: 18px; }
+    .photo-wrap .overlay {
+      position: absolute; inset: 0;
+      background: linear-gradient(to top, rgba(109,40,217,0.5), transparent);
+      border-radius: 18px; opacity: 0; transition: opacity 0.3s;
+    }
+    .photo-wrap:hover .overlay { opacity: 1; }
+
+    /* ── 16 Reasons grid ── */
+    .reasons-section {
+      position: relative; z-index: 1;
+      max-width: 1100px;
+      margin: 20px auto 60px;
+      padding: 0 20px;
+    }
+    .reasons-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 16px;
+      margin-top: 32px;
+    }
+    .reason-card {
+      background: linear-gradient(135deg, rgba(255,255,255,0.08), rgba(255,255,255,0.03));
+      border: 1px solid rgba(167,139,250,0.25);
+      border-radius: 20px;
+      padding: 24px 20px;
+      text-align: center;
+      transition: transform 0.3s, box-shadow 0.3s, border-color 0.3s;
+      cursor: default;
+      backdrop-filter: blur(8px);
+    }
+    .reason-card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 12px 32px rgba(232,121,249,0.3);
+      border-color: rgba(232,121,249,0.5);
+    }
+    .reason-card .number {
+      font-family: 'Playfair Display', serif;
+      font-size: 2rem; font-weight: 700;
+      background: linear-gradient(135deg, #e879f9, #a78bfa);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      line-height: 1; margin-bottom: 12px;
+    }
+    .reason-card .icon { font-size: 1.6rem; display: block; margin-bottom: 8px; }
+    .reason-card p {
+      font-size: 0.88rem; line-height: 1.55;
+      color: #ddd6fe; font-style: italic;
+    }
+
+    /* ── Letter ── */
+    .letter-section {
+      position: relative; z-index: 1;
+      max-width: 720px;
+      margin: 0 auto 70px;
+      padding: 0 20px;
+    }
+    .letter-card {
+      background: linear-gradient(135deg, rgba(255,255,255,0.07), rgba(255,255,255,0.03));
+      border: 1px solid rgba(232,121,249,0.3);
+      border-radius: 28px; padding: 52px 56px;
+      position: relative;
+      backdrop-filter: blur(12px);
+      box-shadow: 0 0 80px rgba(168,85,247,0.15), inset 0 1px 0 rgba(255,255,255,0.1);
+    }
+    .letter-card::before {
+      content: '\201C';
+      position: absolute; top: -4px; left: 36px;
+      font-size: 9rem; line-height: 1;
+      color: #e879f9; opacity: 0.15;
+      font-family: Georgia, serif;
+    }
+    .letter-date {
+      font-size: 0.8rem; letter-spacing: 4px;
+      color: #c084fc; text-transform: uppercase;
+      margin-bottom: 30px; display: block;
+    }
+    .letter-body {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.1rem; line-height: 2;
+      color: #ede9fe; font-style: italic;
+      position: relative; z-index: 1;
+    }
+    .letter-body p + p { margin-top: 22px; }
+    .letter-closing {
+      margin-top: 38px; padding-top: 26px;
+      border-top: 1px solid rgba(232,121,249,0.2);
+      text-align: right; font-size: 1rem;
+      color: #f0abfc; font-style: italic;
+    }
+    .letter-closing strong {
+      display: block; font-size: 1.3rem;
+      font-family: 'Playfair Display', serif;
+      font-style: normal; margin-top: 8px;
+      background: linear-gradient(90deg, #f9a8d4, #e879f9, #a78bfa);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    }
+    @media (max-width: 600px) { .letter-card { padding: 32px 24px; } }
+
+    /* ── Lightbox ── */
+    .lightbox {
+      display: none; position: fixed; inset: 0;
+      background: rgba(8,0,18,0.97);
+      z-index: 1000; justify-content: center;
+      align-items: center; flex-direction: column;
+    }
+    .lightbox.open { display: flex; }
+    .lightbox img {
+      max-width: 92vw; max-height: 80vh;
+      border-radius: 14px;
+      box-shadow: 0 0 80px rgba(232,121,249,0.35);
+    }
+    .lightbox-close {
+      position: absolute; top: 20px; right: 28px;
+      font-size: 2.5rem; cursor: pointer;
+      color: #e9d5ff; background: none; border: none; line-height: 1;
+    }
+    .lightbox-nav { display: flex; gap: 40px; margin-top: 22px; }
+    .lightbox-nav button {
+      background: rgba(139,92,246,0.25);
+      border: 1px solid #a78bfa; color: white;
+      padding: 10px 30px; border-radius: 999px;
+      font-size: 1.3rem; cursor: pointer;
+      transition: background 0.2s;
+    }
+    .lightbox-nav button:hover { background: rgba(139,92,246,0.6); }
+    .lightbox-counter {
+      margin-top: 12px; font-size: 0.85rem;
+      color: #c084fc; letter-spacing: 2px;
+    }
+
+    /* ── Footer ── */
+    footer {
+      position: relative; z-index: 1;
+      text-align: center; padding: 40px 20px;
+      color: #c4b5fd; font-size: 0.9rem; opacity: 0.6;
+    }
+  </style>
+</head>
+<body>
+
+<div class="stars" id="stars"></div>
+
+<!-- ── HERO ── -->
+<header class="hero">
+  <span class="hero-emoji">🌸</span>
+  <h1>Feliz Cumpleaños</h1>
+  <p class="hero-sub">Consuelito, hoy el mundo celebra que existes</p>
+  <div class="hero-badge">✨ &nbsp;16 AÑOS&nbsp; ✨</div>
+</header>
+
+<!-- ── QUOTE 1 ── -->
+<div class="quote-divider">
+  <blockquote>
+    "Que cada año que pase te encuentre más libre, más valiente<br>y más tú misma."
+  </blockquote>
+  <div class="quote-line"></div>
+</div>
+
+<!-- ── GALLERY ── -->
+<p class="section-title">📸 &nbsp; Momentos que atesoramos &nbsp; 📸</p>
+<div class="gallery" id="gallery">
+  <div class="photo-wrap" onclick="openLightbox(0)"><img src="DSCF3932.JPG" loading="lazy" /><div class="overlay"></div></div>
+  <div class="photo-wrap" onclick="openLightbox(1)"><img src="IMG_1071.JPG" loading="lazy" /><div class="overlay"></div></div>
+  <div class="photo-wrap" onclick="openLightbox(2)"><img src="IMG_1072.JPG" loading="lazy" /><div class="overlay"></div></div>
+  <div class="photo-wrap" onclick="openLightbox(3)"><img src="IMG_1672.PNG" loading="lazy" /><div class="overlay"></div></div>
+  <div class="photo-wrap" onclick="openLightbox(4)"><img src="IMG_2254.JPG" loading="lazy" /><div class="overlay"></div></div>
+  <div class="photo-wrap" onclick="openLightbox(5)"><img src="IMG_4374.JPG" loading="lazy" /><div class="overlay"></div></div>
+  <div class="photo-wrap" onclick="openLightbox(6)"><img src="IMG_4375.JPG" loading="lazy" /><div class="overlay"></div></div>
+  <div class="photo-wrap" onclick="openLightbox(7)"><img src="IMG_4546.JPG" loading="lazy" /><div class="overlay"></div></div>
+  <div class="photo-wrap" onclick="openLightbox(8)"><img src="IMG_4850.JPG" loading="lazy" /><div class="overlay"></div></div>
+  <div class="photo-wrap" onclick="openLightbox(9)"><img src="IMG_4900.JPG" loading="lazy" /><div class="overlay"></div></div>
+  <div class="photo-wrap" onclick="openLightbox(10)"><img src="IMG_4915.JPG" loading="lazy" /><div class="overlay"></div></div>
+  <div class="photo-wrap" onclick="openLightbox(11)"><img src="IMG_5066.JPG" loading="lazy" /><div class="overlay"></div></div>
+  <div class="photo-wrap" onclick="openLightbox(12)"><img src="IMG_5108.PNG" loading="lazy" /><div class="overlay"></div></div>
+  <div class="photo-wrap" onclick="openLightbox(13)"><img src="IMG_5110.JPG" loading="lazy" /><div class="overlay"></div></div>
+  <div class="photo-wrap" onclick="openLightbox(14)"><img src="IMG_5460.JPG" loading="lazy" /><div class="overlay"></div></div>
+  <div class="photo-wrap" onclick="openLightbox(15)"><img src="IMG_5648.JPG" loading="lazy" /><div class="overlay"></div></div>
+  <div class="photo-wrap" onclick="openLightbox(16)"><img src="IMG_5701.JPG" loading="lazy" /><div class="overlay"></div></div>
+  <div class="photo-wrap" onclick="openLightbox(17)"><img src="IMG_5800.JPG" loading="lazy" /><div class="overlay"></div></div>
+</div>
+
+<!-- ── QUOTE 2 ── -->
+<div class="quote-divider">
+  <blockquote>
+    "No hay límites para quien tiene el corazón<br>lleno de sueños y el alma llena de fuego."
+  </blockquote>
+  <div class="quote-line"></div>
+</div>
+
+<!-- ── 16 REASONS ── -->
+<section class="reasons-section">
+  <p class="section-title">💜 &nbsp; 16 razones por las que te amamos &nbsp; 💜</p>
+  <div class="reasons-grid">
+    <div class="reason-card">
+      <div class="number">01</div>
+      <span class="icon">😂</span>
+      <p>Tu risa contagiosa que ilumina cualquier cuarto</p>
+    </div>
+    <div class="reason-card">
+      <div class="number">02</div>
+      <span class="icon">💛</span>
+      <p>Tu corazón enorme que siempre da más de lo que recibe</p>
+    </div>
+    <div class="reason-card">
+      <div class="number">03</div>
+      <span class="icon">🦋</span>
+      <p>Tu valentía para ser tú misma en un mundo que pide que seas otra</p>
+    </div>
+    <div class="reason-card">
+      <div class="number">04</div>
+      <span class="icon">🌙</span>
+      <p>Tu forma única y mágica de ver el mundo</p>
+    </div>
+    <div class="reason-card">
+      <div class="number">05</div>
+      <span class="icon">📸</span>
+      <p>Cómo conviertes los momentos simples en recuerdos eternos</p>
+    </div>
+    <div class="reason-card">
+      <div class="number">06</div>
+      <span class="icon">🌊</span>
+      <p>Tu sensibilidad profunda — tu mayor superpoder</p>
+    </div>
+    <div class="reason-card">
+      <div class="number">07</div>
+      <span class="icon">🔥</span>
+      <p>Tu determinación cuando te propones algo imposible</p>
+    </div>
+    <div class="reason-card">
+      <div class="number">08</div>
+      <span class="icon">🤍</span>
+      <p>La ternura que le das a todos los que amas</p>
+    </div>
+    <div class="reason-card">
+      <div class="number">09</div>
+      <span class="icon">🌿</span>
+      <p>Tu curiosidad sin límites — siempre quieres saber más</p>
+    </div>
+    <div class="reason-card">
+      <div class="number">10</div>
+      <span class="icon">🌟</span>
+      <p>Cómo te reinventas cada vez que la vida te pone a prueba</p>
+    </div>
+    <div class="reason-card">
+      <div class="number">11</div>
+      <span class="icon">😊</span>
+      <p>Tu sonrisa, que vale más que mil palabras</p>
+    </div>
+    <div class="reason-card">
+      <div class="number">12</div>
+      <span class="icon">🎨</span>
+      <p>Tu creatividad e imaginación que no conocen fronteras</p>
+    </div>
+    <div class="reason-card">
+      <div class="number">13</div>
+      <span class="icon">🌺</span>
+      <p>La manera en que nos haces sentir especiales con tu presencia</p>
+    </div>
+    <div class="reason-card">
+      <div class="number">14</div>
+      <span class="icon">💪</span>
+      <p>Tu fuerza para levantarte cada vez que las cosas se ponen difíciles</p>
+    </div>
+    <div class="reason-card">
+      <div class="number">15</div>
+      <span class="icon">✨</span>
+      <p>El amor que le pones a cada cosa que haces, grande o pequeña</p>
+    </div>
+    <div class="reason-card">
+      <div class="number">16</div>
+      <span class="icon">🌸</span>
+      <p>Simplemente — por ser tú, exactamente como eres</p>
+    </div>
+  </div>
+</section>
+
+<!-- ── QUOTE 3 ── -->
+<div class="quote-divider">
+  <blockquote>
+    "Brilla tanto que quienes no quieran verte brillar<br>necesiten gafas de sol."
+  </blockquote>
+  <div class="quote-line"></div>
+</div>
+
+<!-- ── LETTER ── -->
+<section class="letter-section">
+  <p class="section-title" style="margin-bottom:28px">💌 &nbsp; Un mensaje para ti &nbsp; 💌</p>
+  <div class="letter-card">
+    <span class="letter-date">28 de Abril · 2026</span>
+    <div class="letter-body">
+      <p>Hoy, 28 de Abril, no solo cumples un año más — celebras que el mundo tiene la suerte de tenerte desde hace 16.</p>
+      <p>Te he visto crecer, reír y convertirte en esta mujer increíble que me llena de orgullo cada vez que pronuncio tu nombre.</p>
+      <p>Nunca permitas que nadie apague tu brillo ni te diga qué tan lejos puedes llegar. Tienes una fuerza interna que te hace capaz de todo lo que sueñes.</p>
+      <p>Vive intensamente, equivócate, vuelve a empezar y, sobre todo, sé inmensamente feliz. Aquí siempre tendrás un refugio y alguien que te admira profundamente.</p>
+    </div>
+    <div class="letter-closing">
+      con todo mi amor,
+      <strong>¡Felices 16, mi niña valiente! 🌸</strong>
+    </div>
+  </div>
+</section>
+
+<!-- ── FOOTER QUOTE ── -->
+<div class="quote-divider" style="padding-bottom: 20px;">
+  <blockquote style="font-size:1rem; opacity:0.7;">
+    "La vida es corta para no ser feliz — y tú mereces<br>cada pedacito de alegría que exista."
+  </blockquote>
+  <div class="quote-line"></div>
+</div>
+
+<footer>Hecho con ❤️ para Consuelito · 16 años · 28 de Abril 2026</footer>
+
+<!-- ── LIGHTBOX ── -->
+<div class="lightbox" id="lightbox">
+  <button class="lightbox-close" onclick="closeLightbox()">✕</button>
+  <img id="lightbox-img" src="" alt="" />
+  <div class="lightbox-nav">
+    <button onclick="prevPhoto()">← Anterior</button>
+    <button onclick="nextPhoto()">Siguiente →</button>
+  </div>
+  <div class="lightbox-counter" id="lb-counter"></div>
+</div>
+
+<script>
+  // ── Stars ──
+  const starsEl = document.getElementById('stars');
+  for (let i = 0; i < 140; i++) {
+    const s = document.createElement('div');
+    s.className = 'star';
+    s.style.cssText = `
+      left:${Math.random()*100}%;
+      top:${Math.random()*100}%;
+      width:${1.5+Math.random()*3}px;
+      height:${1.5+Math.random()*3}px;
+      animation-delay:${Math.random()*4}s;
+      animation-duration:${2+Math.random()*3}s;
+    `;
+    starsEl.appendChild(s);
+  }
+
+  // ── Floating petals ──
+  const petals = ['🌸','🌺','✨','💜','🌷','⭐','💫','🦋'];
+  for (let i = 0; i < 18; i++) {
+    const p = document.createElement('div');
+    p.className = 'petal';
+    p.textContent = petals[Math.floor(Math.random()*petals.length)];
+    const dur = 8 + Math.random() * 12;
+    p.style.cssText = `
+      left:${Math.random()*100}%;
+      animation-duration:${dur}s;
+      animation-delay:${Math.random()*dur}s;
+      font-size:${0.8+Math.random()*1.2}rem;
+    `;
+    document.body.appendChild(p);
+  }
+
+  // ── Sparkle on click ──
+  const sparkleEmojis = ['✨','💫','🌟','⭐','💜','🌸'];
+  document.addEventListener('click', (e) => {
+    for (let i = 0; i < 5; i++) {
+      const sp = document.createElement('div');
+      sp.className = 'sparkle';
+      sp.textContent = sparkleEmojis[Math.floor(Math.random()*sparkleEmojis.length)];
+      sp.style.left = (e.clientX - 10 + (Math.random()-0.5)*40) + 'px';
+      sp.style.top  = (e.clientY - 10 + (Math.random()-0.5)*40) + 'px';
+      sp.style.animationDelay = (Math.random()*0.2) + 's';
+      document.body.appendChild(sp);
+      setTimeout(() => sp.remove(), 900);
+    }
+  });
+
+  // ── Lightbox ──
+  const photos = [
+    'DSCF3932.JPG','IMG_1071.JPG','IMG_1072.JPG','IMG_1672.PNG',
+    'IMG_2254.JPG','IMG_4374.JPG','IMG_4375.JPG','IMG_4546.JPG',
+    'IMG_4850.JPG','IMG_4900.JPG','IMG_4915.JPG','IMG_5066.JPG',
+    'IMG_5108.PNG','IMG_5110.JPG','IMG_5460.JPG','IMG_5648.JPG',
+    'IMG_5701.JPG','IMG_5800.JPG'
+  ];
+  let current = 0;
+
+  function updateCounter() {
+    document.getElementById('lb-counter').textContent =
+      (current + 1) + ' / ' + photos.length;
+  }
+  function openLightbox(i) {
+    current = i;
+    document.getElementById('lightbox-img').src = photos[i];
+    document.getElementById('lightbox').classList.add('open');
+    updateCounter();
+  }
+  function closeLightbox() {
+    document.getElementById('lightbox').classList.remove('open');
+  }
+  function nextPhoto() {
+    current = (current + 1) % photos.length;
+    document.getElementById('lightbox-img').src = photos[current];
+    updateCounter();
+  }
+  function prevPhoto() {
+    current = (current - 1 + photos.length) % photos.length;
+    document.getElementById('lightbox-img').src = photos[current];
+    updateCounter();
+  }
+  document.getElementById('lightbox').addEventListener('click', function(e) {
+    if (e.target === this) closeLightbox();
+  });
+  document.addEventListener('keydown', e => {
+    if (e.key === 'ArrowRight') nextPhoto();
+    if (e.key === 'ArrowLeft')  prevPhoto();
+    if (e.key === 'Escape')     closeLightbox();
+  });
+
+  // Swipe on mobile
+  let touchStartX = 0;
+  document.getElementById('lightbox').addEventListener('touchstart', e => {
+    touchStartX = e.touches[0].clientX;
+  });
+  document.getElementById('lightbox').addEventListener('touchend', e => {
+    const dx = e.changedTouches[0].clientX - touchStartX;
+    if (Math.abs(dx) > 50) dx < 0 ? nextPhoto() : prevPhoto();
+  });
+</script>
+</body>
+</html>
