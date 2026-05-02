@@ -247,6 +247,96 @@
     }
     @media (max-width: 600px) { .letter-card { padding: 32px 24px; } }
 
+    /* ── Lock screen ── */
+    #lockScreen {
+      position: fixed; inset: 0; z-index: 9000;
+      background: linear-gradient(160deg, #0a0118 0%, #1e0645 50%, #0a0118 100%);
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      padding: 30px;
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+    #lockScreen.unlocking {
+      opacity: 0; transform: scale(1.05); pointer-events: none;
+    }
+    .lock-emoji { font-size: 3.5rem; margin-bottom: 16px; animation: pulse 2s ease-in-out infinite; }
+    .lock-title {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(1.6rem, 5vw, 2.6rem);
+      background: linear-gradient(90deg, #f9a8d4, #e879f9, #a78bfa, #f9a8d4);
+      background-size: 200%;
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      animation: shimmer 4s linear infinite;
+      text-align: center; margin-bottom: 8px;
+    }
+    .lock-sub {
+      font-family: 'Playfair Display', serif; font-style: italic;
+      font-size: 1rem; color: #c4b5fd; margin-bottom: 40px;
+      text-align: center; opacity: 0.8;
+    }
+    .lock-box {
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(232,121,249,0.3);
+      border-radius: 24px; padding: 40px 44px;
+      max-width: 420px; width: 100%;
+      backdrop-filter: blur(14px);
+      box-shadow: 0 0 60px rgba(168,85,247,0.2);
+      text-align: center;
+    }
+    .lock-box label {
+      display: block; font-size: 0.8rem;
+      letter-spacing: 4px; text-transform: uppercase;
+      color: #d8b4fe; margin-bottom: 18px;
+    }
+    .lock-input {
+      width: 100%; padding: 14px 20px;
+      background: rgba(255,255,255,0.08);
+      border: 1.5px solid rgba(167,139,250,0.4);
+      border-radius: 12px; color: white;
+      font-size: 1.2rem; text-align: center;
+      letter-spacing: 6px; outline: none;
+      font-family: 'Lato', sans-serif;
+      transition: border-color 0.3s, box-shadow 0.3s;
+    }
+    .lock-input::placeholder { color: rgba(255,255,255,0.25); letter-spacing: 2px; font-size: 0.95rem; }
+    .lock-input:focus {
+      border-color: #e879f9;
+      box-shadow: 0 0 20px rgba(232,121,249,0.25);
+    }
+    .lock-input.error {
+      border-color: #f87171;
+      box-shadow: 0 0 20px rgba(248,113,113,0.3);
+      animation: shake 0.4s ease;
+    }
+    @keyframes shake {
+      0%,100% { transform: translateX(0); }
+      20%     { transform: translateX(-8px); }
+      40%     { transform: translateX(8px); }
+      60%     { transform: translateX(-6px); }
+      80%     { transform: translateX(6px); }
+    }
+    .lock-btn {
+      margin-top: 22px; width: 100%;
+      padding: 14px; border: none; border-radius: 12px;
+      background: linear-gradient(135deg, #e879f9, #8b5cf6);
+      color: white; font-size: 1rem; font-weight: 600;
+      letter-spacing: 3px; text-transform: uppercase;
+      cursor: pointer;
+      transition: opacity 0.2s, transform 0.2s;
+      font-family: 'Lato', sans-serif;
+    }
+    .lock-btn:hover { opacity: 0.88; transform: translateY(-2px); }
+    .lock-error {
+      margin-top: 14px; font-size: 0.85rem;
+      color: #fca5a5; min-height: 20px;
+      transition: opacity 0.3s;
+    }
+    .lock-hint {
+      margin-top: 28px; font-size: 0.78rem;
+      color: rgba(196,181,253,0.45);
+      letter-spacing: 1px;
+    }
+
     /* ── Lightbox ── */
     .lightbox {
       display: none; position: fixed; inset: 0;
@@ -289,6 +379,22 @@
 </head>
 <body>
 
+<!-- ── LOCK SCREEN ── -->
+<div id="lockScreen">
+  <div class="lock-emoji">🔒</div>
+  <div class="lock-title">Contenido Privado</div>
+  <p class="lock-sub">Solo personas especiales pueden entrar 🌸</p>
+  <div class="lock-box">
+    <label for="passwordInput">Escribe la palabra secreta</label>
+    <input id="passwordInput" class="lock-input" type="password"
+           placeholder="tu palabra secreta..."
+           autocomplete="off" autocorrect="off" spellcheck="false" />
+    <button class="lock-btn" onclick="checkPassword()">Entrar ✨</button>
+    <div class="lock-error" id="lockError"></div>
+    <p class="lock-hint">Pista: el nombre de la cumpleañera 🎂</p>
+  </div>
+</div>
+
 <div class="stars" id="stars"></div>
 
 <!-- ── HERO ── -->
@@ -310,39 +416,63 @@
 <!-- ── GALLERY ── -->
 <p class="section-title">📸 &nbsp; Momentos que atesoramos &nbsp; 📸</p>
 <div class="gallery" id="gallery">
-  <div class="photo-wrap" onclick="openLightbox(0)"><img src="DSCF3932.JPG" loading="lazy" /><div class="overlay"></div></div>
-  <div class="photo-wrap" onclick="openLightbox(1)"><img src="IMG_1071.JPG" loading="lazy" /><div class="overlay"></div></div>
-  <div class="photo-wrap" onclick="openLightbox(2)"><img src="IMG_1072.JPG" loading="lazy" /><div class="overlay"></div></div>
-  <div class="photo-wrap" onclick="openLightbox(3)"><img src="IMG_1672.PNG" loading="lazy" /><div class="overlay"></div></div>
-  <div class="photo-wrap" onclick="openLightbox(4)"><img src="IMG_2254.JPG" loading="lazy" /><div class="overlay"></div></div>
-  <div class="photo-wrap" onclick="openLightbox(5)"><img src="IMG_4375.JPG" loading="lazy" /><div class="overlay"></div></div>
-  <div class="photo-wrap" onclick="openLightbox(6)"><img src="IMG_4546.JPG" loading="lazy" /><div class="overlay"></div></div>
-  <div class="photo-wrap" onclick="openLightbox(7)"><img src="IMG_4850.JPG" loading="lazy" /><div class="overlay"></div></div>
-  <div class="photo-wrap" onclick="openLightbox(8)"><img src="imagenagregar01.jpeg" loading="lazy" /><div class="overlay"></div></div>
-  <div class="photo-wrap" onclick="openLightbox(9)"><img src="IMG_4900.JPG" loading="lazy" /><div class="overlay"></div></div>
-  <div class="photo-wrap" onclick="openLightbox(10)"><img src="IMG_4915.JPG" loading="lazy" /><div class="overlay"></div></div>
-  <div class="photo-wrap" onclick="openLightbox(11)"><img src="IMG_5066.JPG" loading="lazy" /><div class="overlay"></div></div>
-  <div class="photo-wrap" onclick="openLightbox(12)"><img src="IMG_5108.PNG" loading="lazy" /><div class="overlay"></div></div>
-  <div class="photo-wrap" onclick="openLightbox(13)"><img src="IMG_5460.JPG" loading="lazy" /><div class="overlay"></div></div>
-  <div class="photo-wrap" onclick="openLightbox(14)"><img src="IMG_5648.JPG" loading="lazy" /><div class="overlay"></div></div>
-  <div class="photo-wrap" onclick="openLightbox(15)"><img src="IMG_5701.JPG" loading="lazy" /><div class="overlay"></div></div>
-  <div class="photo-wrap" onclick="openLightbox(16)"><img src="IMG_5800.JPG" loading="lazy" /><div class="overlay"></div></div>
-  <div class="photo-wrap" onclick="openLightbox(17)"><img src="consu001.JPG" loading="lazy" /><div class="overlay"></div></div>
-  <div class="photo-wrap" onclick="openLightbox(18)"><img src="consu002.JPG" loading="lazy" /><div class="overlay"></div></div>
-  <div class="photo-wrap" onclick="openLightbox(19)"><img src="consu003.jpg" loading="lazy" /><div class="overlay"></div></div>
-  <div class="photo-wrap" onclick="openLightbox(20)"><img src="consu004.jpg" loading="lazy" /><div class="overlay"></div></div>
-  <div class="photo-wrap" onclick="openLightbox(21)"><img src="consu005.jpg" loading="lazy" /><div class="overlay"></div></div>
-  <div class="photo-wrap" onclick="openLightbox(22)"><img src="consu006.jpg" loading="lazy" /><div class="overlay"></div></div>
-  <div class="photo-wrap" onclick="openLightbox(23)"><img src="consu007.jpg" loading="lazy" /><div class="overlay"></div></div>
-  <div class="photo-wrap" onclick="openLightbox(24)"><img src="consu008.jpg" loading="lazy" /><div class="overlay"></div></div>
-  <div class="photo-wrap" onclick="openLightbox(25)"><img src="2013-04-08 11.56.12.jpg" loading="lazy" /><div class="overlay"></div></div>
-  <div class="photo-wrap" onclick="openLightbox(26)"><img src="2013-04-20 15.21.01.jpg" loading="lazy" /><div class="overlay"></div></div>
-  <div class="photo-wrap" onclick="openLightbox(27)"><img src="2013-06-15 20.36.10.jpg" loading="lazy" /><div class="overlay"></div></div>
-  <div class="photo-wrap" onclick="openLightbox(28)"><img src="2013-06-15 20.36.59.jpg" loading="lazy" /><div class="overlay"></div></div>
-  <div class="photo-wrap" onclick="openLightbox(29)"><img src="2013-07-28 00.39.18.jpg" loading="lazy" /><div class="overlay"></div></div>
-  <div class="photo-wrap" onclick="openLightbox(30)"><img src="2013-07-28 00.40.23.jpg" loading="lazy" /><div class="overlay"></div></div>
-  <div class="photo-wrap" onclick="openLightbox(31)"><img src="2013-07-28 00.40.26.jpg" loading="lazy" /><div class="overlay"></div></div>
-  <div class="photo-wrap" onclick="openLightbox(32)"><img src="2014-11-08 19.33.46.jpg" loading="lazy" /><div class="overlay"></div></div>
+  <div class="photo-wrap" onclick="openLightbox(0)"><img src="2013-04-08 11.56.12.jpg" loading="lazy" /><div class="overlay"></div></div>
+  <div class="photo-wrap" onclick="openLightbox(1)"><img src="2013-04-20 15.21.01.jpg" loading="lazy" /><div class="overlay"></div></div>
+  <div class="photo-wrap" onclick="openLightbox(2)"><img src="2013-06-15 20.36.10.jpg" loading="lazy" /><div class="overlay"></div></div>
+  <div class="photo-wrap" onclick="openLightbox(3)"><img src="2013-06-15 20.36.59.jpg" loading="lazy" /><div class="overlay"></div></div>
+  <div class="photo-wrap" onclick="openLightbox(4)"><img src="2013-07-28 00.39.18.jpg" loading="lazy" /><div class="overlay"></div></div>
+  <div class="photo-wrap" onclick="openLightbox(5)"><img src="2013-07-28 00.40.23.jpg" loading="lazy" /><div class="overlay"></div></div>
+  <div class="photo-wrap" onclick="openLightbox(6)"><img src="2013-07-28 00.40.26.jpg" loading="lazy" /><div class="overlay"></div></div>
+  <div class="photo-wrap" onclick="openLightbox(7)"><img src="2014-11-08 19.33.46.jpg" loading="lazy" /><div class="overlay"></div></div>
+  <div class="photo-wrap" onclick="openLightbox(8)"><img src="DSCF3932.JPG" loading="lazy" /><div class="overlay"></div></div>
+  <div class="photo-wrap" onclick="openLightbox(9)"><img src="IMG_1071.JPG" loading="lazy" /><div class="overlay"></div></div>
+  <div class="photo-wrap" onclick="openLightbox(10)"><img src="IMG_1072.JPG" loading="lazy" /><div class="overlay"></div></div>
+  <div class="photo-wrap" onclick="openLightbox(11)"><img src="IMG_1672.PNG" loading="lazy" /><div class="overlay"></div></div>
+  <div class="photo-wrap" onclick="openLightbox(12)"><img src="IMG_2254.JPG" loading="lazy" /><div class="overlay"></div></div>
+  <div class="photo-wrap" onclick="openLightbox(13)"><img src="IMG_4375.JPG" loading="lazy" /><div class="overlay"></div></div>
+  <div class="photo-wrap" onclick="openLightbox(14)"><img src="IMG_4546.JPG" loading="lazy" /><div class="overlay"></div></div>
+  <div class="photo-wrap" onclick="openLightbox(15)"><img src="IMG_4850.JPG" loading="lazy" /><div class="overlay"></div></div>
+  <div class="photo-wrap" onclick="openLightbox(16)"><img src="IMG_4900.JPG" loading="lazy" /><div class="overlay"></div></div>
+  <div class="photo-wrap" onclick="openLightbox(17)"><img src="IMG_4915.JPG" loading="lazy" /><div class="overlay"></div></div>
+  <div class="photo-wrap" onclick="openLightbox(18)"><img src="IMG_5066.JPG" loading="lazy" /><div class="overlay"></div></div>
+  <div class="photo-wrap" onclick="openLightbox(19)"><img src="IMG_5108.PNG" loading="lazy" /><div class="overlay"></div></div>
+  <div class="photo-wrap" onclick="openLightbox(20)"><img src="IMG_5460.JPG" loading="lazy" /><div class="overlay"></div></div>
+  <div class="photo-wrap" onclick="openLightbox(21)"><img src="IMG_5648.JPG" loading="lazy" /><div class="overlay"></div></div>
+  <div class="photo-wrap" onclick="openLightbox(22)"><img src="IMG_5701.JPG" loading="lazy" /><div class="overlay"></div></div>
+  <div class="photo-wrap" onclick="openLightbox(23)"><img src="IMG_5800.JPG" loading="lazy" /><div class="overlay"></div></div>
+  <div class="photo-wrap" onclick="openLightbox(24)"><img src="WhatsApp Image 2026-05-02 at 11.57.29 AM (1).jpeg" loading="lazy" /><div class="overlay"></div></div>
+  <div class="photo-wrap" onclick="openLightbox(25)"><img src="WhatsApp Image 2026-05-02 at 11.57.29 AM (2).jpeg" loading="lazy" /><div class="overlay"></div></div>
+  <div class="photo-wrap" onclick="openLightbox(26)"><img src="WhatsApp Image 2026-05-02 at 11.57.29 AM (3).jpeg" loading="lazy" /><div class="overlay"></div></div>
+  <div class="photo-wrap" onclick="openLightbox(27)"><img src="WhatsApp Image 2026-05-02 at 11.57.29 AM.jpeg" loading="lazy" /><div class="overlay"></div></div>
+  <div class="photo-wrap" onclick="openLightbox(28)"><img src="WhatsApp Image 2026-05-02 at 11.57.30 AM (1).jpeg" loading="lazy" /><div class="overlay"></div></div>
+  <div class="photo-wrap" onclick="openLightbox(29)"><img src="WhatsApp Image 2026-05-02 at 11.57.30 AM (2).jpeg" loading="lazy" /><div class="overlay"></div></div>
+  <div class="photo-wrap" onclick="openLightbox(30)"><img src="WhatsApp Image 2026-05-02 at 11.57.30 AM (3).jpeg" loading="lazy" /><div class="overlay"></div></div>
+  <div class="photo-wrap" onclick="openLightbox(31)"><img src="WhatsApp Image 2026-05-02 at 11.57.30 AM (4).jpeg" loading="lazy" /><div class="overlay"></div></div>
+  <div class="photo-wrap" onclick="openLightbox(32)"><img src="WhatsApp Image 2026-05-02 at 11.57.30 AM.jpeg" loading="lazy" /><div class="overlay"></div></div>
+  <div class="photo-wrap" onclick="openLightbox(33)"><img src="WhatsApp Image 2026-05-02 at 11.57.31 AM (1).jpeg" loading="lazy" /><div class="overlay"></div></div>
+  <div class="photo-wrap" onclick="openLightbox(34)"><img src="WhatsApp Image 2026-05-02 at 11.57.31 AM (2).jpeg" loading="lazy" /><div class="overlay"></div></div>
+  <div class="photo-wrap" onclick="openLightbox(35)"><img src="WhatsApp Image 2026-05-02 at 11.57.31 AM (3).jpeg" loading="lazy" /><div class="overlay"></div></div>
+  <div class="photo-wrap" onclick="openLightbox(36)"><img src="WhatsApp Image 2026-05-02 at 11.57.31 AM (4).jpeg" loading="lazy" /><div class="overlay"></div></div>
+  <div class="photo-wrap" onclick="openLightbox(37)"><img src="WhatsApp Image 2026-05-02 at 11.57.31 AM (5).jpeg" loading="lazy" /><div class="overlay"></div></div>
+  <div class="photo-wrap" onclick="openLightbox(38)"><img src="WhatsApp Image 2026-05-02 at 11.57.31 AM.jpeg" loading="lazy" /><div class="overlay"></div></div>
+  <div class="photo-wrap" onclick="openLightbox(39)"><img src="WhatsApp Image 2026-05-02 at 11.57.32 AM (1).jpeg" loading="lazy" /><div class="overlay"></div></div>
+  <div class="photo-wrap" onclick="openLightbox(40)"><img src="WhatsApp Image 2026-05-02 at 11.57.32 AM (2).jpeg" loading="lazy" /><div class="overlay"></div></div>
+  <div class="photo-wrap" onclick="openLightbox(41)"><img src="WhatsApp Image 2026-05-02 at 11.57.32 AM (3).jpeg" loading="lazy" /><div class="overlay"></div></div>
+  <div class="photo-wrap" onclick="openLightbox(42)"><img src="WhatsApp Image 2026-05-02 at 11.57.32 AM (4).jpeg" loading="lazy" /><div class="overlay"></div></div>
+  <div class="photo-wrap" onclick="openLightbox(43)"><img src="WhatsApp Image 2026-05-02 at 11.57.32 AM (5).jpeg" loading="lazy" /><div class="overlay"></div></div>
+  <div class="photo-wrap" onclick="openLightbox(44)"><img src="WhatsApp Image 2026-05-02 at 11.57.32 AM.jpeg" loading="lazy" /><div class="overlay"></div></div>
+  <div class="photo-wrap" onclick="openLightbox(45)"><img src="WhatsApp Image 2026-05-02 at 11.57.33 AM (1).jpeg" loading="lazy" /><div class="overlay"></div></div>
+  <div class="photo-wrap" onclick="openLightbox(46)"><img src="WhatsApp Image 2026-05-02 at 11.57.33 AM (2).jpeg" loading="lazy" /><div class="overlay"></div></div>
+  <div class="photo-wrap" onclick="openLightbox(47)"><img src="WhatsApp Image 2026-05-02 at 11.57.33 AM.jpeg" loading="lazy" /><div class="overlay"></div></div>
+  <div class="photo-wrap" onclick="openLightbox(48)"><img src="consu001.JPG" loading="lazy" /><div class="overlay"></div></div>
+  <div class="photo-wrap" onclick="openLightbox(49)"><img src="consu002.JPG" loading="lazy" /><div class="overlay"></div></div>
+  <div class="photo-wrap" onclick="openLightbox(50)"><img src="consu003.jpg" loading="lazy" /><div class="overlay"></div></div>
+  <div class="photo-wrap" onclick="openLightbox(51)"><img src="consu004.jpg" loading="lazy" /><div class="overlay"></div></div>
+  <div class="photo-wrap" onclick="openLightbox(52)"><img src="consu005.jpg" loading="lazy" /><div class="overlay"></div></div>
+  <div class="photo-wrap" onclick="openLightbox(53)"><img src="consu006.jpg" loading="lazy" /><div class="overlay"></div></div>
+  <div class="photo-wrap" onclick="openLightbox(54)"><img src="consu007.jpg" loading="lazy" /><div class="overlay"></div></div>
+  <div class="photo-wrap" onclick="openLightbox(55)"><img src="consu008.jpg" loading="lazy" /><div class="overlay"></div></div>
+  <div class="photo-wrap" onclick="openLightbox(56)"><img src="imagenagregar01.jpeg" loading="lazy" /><div class="overlay"></div></div>
 </div>
 
 <!-- ── QUOTE 2 ── -->
@@ -488,6 +618,35 @@
 </div>
 
 <script>
+  // ── Lock screen ──
+  const SECRET = 'consuelo16'; // 👈 cambia esta palabra si quieres
+
+  function checkPassword() {
+    const val = document.getElementById('passwordInput').value.trim().toLowerCase();
+    const input = document.getElementById('passwordInput');
+    const errEl = document.getElementById('lockError');
+    if (val === SECRET) {
+      sessionStorage.setItem('unlocked', '1');
+      document.getElementById('lockScreen').classList.add('unlocking');
+      setTimeout(() => document.getElementById('lockScreen').style.display = 'none', 650);
+      errEl.textContent = '';
+    } else {
+      input.classList.add('error');
+      errEl.textContent = '❌ Palabra incorrecta, intenta de nuevo';
+      setTimeout(() => { input.classList.remove('error'); input.value = ''; }, 600);
+    }
+  }
+
+  // Enter key support
+  document.getElementById('passwordInput').addEventListener('keydown', e => {
+    if (e.key === 'Enter') checkPassword();
+  });
+
+  // Skip if already unlocked this session
+  if (sessionStorage.getItem('unlocked') === '1') {
+    document.getElementById('lockScreen').style.display = 'none';
+  }
+
   // ── Stars ──
   const starsEl = document.getElementById('stars');
   for (let i = 0; i < 140; i++) {
@@ -536,16 +695,26 @@
   });
 
   // ── Lightbox ──
-        const photos = [
-    'DSCF3932.JPG','IMG_1071.JPG','IMG_1072.JPG','IMG_1672.PNG',
-    'IMG_2254.JPG','IMG_4375.JPG','IMG_4546.JPG','IMG_4850.JPG',
-    'imagenagregar01.jpeg','IMG_4900.JPG','IMG_4915.JPG','IMG_5066.JPG',
-    'IMG_5108.PNG','IMG_5460.JPG','IMG_5648.JPG','IMG_5701.JPG',
-    'IMG_5800.JPG','consu001.JPG','consu002.JPG','consu003.jpg',
-    'consu004.jpg','consu005.jpg','consu006.jpg','consu007.jpg',
-    'consu008.jpg','2013-04-08 11.56.12.jpg','2013-04-20 15.21.01.jpg','2013-06-15 20.36.10.jpg',
-    '2013-06-15 20.36.59.jpg','2013-07-28 00.39.18.jpg','2013-07-28 00.40.23.jpg','2013-07-28 00.40.26.jpg',
-    '2014-11-08 19.33.46.jpg'
+          const photos = [
+    '2013-04-08 11.56.12.jpg','2013-04-20 15.21.01.jpg','2013-06-15 20.36.10.jpg',
+    '2013-06-15 20.36.59.jpg','2013-07-28 00.39.18.jpg','2013-07-28 00.40.23.jpg',
+    '2013-07-28 00.40.26.jpg','2014-11-08 19.33.46.jpg','DSCF3932.JPG',
+    'IMG_1071.JPG','IMG_1072.JPG','IMG_1672.PNG',
+    'IMG_2254.JPG','IMG_4375.JPG','IMG_4546.JPG',
+    'IMG_4850.JPG','IMG_4900.JPG','IMG_4915.JPG',
+    'IMG_5066.JPG','IMG_5108.PNG','IMG_5460.JPG',
+    'IMG_5648.JPG','IMG_5701.JPG','IMG_5800.JPG',
+    'WhatsApp Image 2026-05-02 at 11.57.29 AM (1).jpeg','WhatsApp Image 2026-05-02 at 11.57.29 AM (2).jpeg','WhatsApp Image 2026-05-02 at 11.57.29 AM (3).jpeg',
+    'WhatsApp Image 2026-05-02 at 11.57.29 AM.jpeg','WhatsApp Image 2026-05-02 at 11.57.30 AM (1).jpeg','WhatsApp Image 2026-05-02 at 11.57.30 AM (2).jpeg',
+    'WhatsApp Image 2026-05-02 at 11.57.30 AM (3).jpeg','WhatsApp Image 2026-05-02 at 11.57.30 AM (4).jpeg','WhatsApp Image 2026-05-02 at 11.57.30 AM.jpeg',
+    'WhatsApp Image 2026-05-02 at 11.57.31 AM (1).jpeg','WhatsApp Image 2026-05-02 at 11.57.31 AM (2).jpeg','WhatsApp Image 2026-05-02 at 11.57.31 AM (3).jpeg',
+    'WhatsApp Image 2026-05-02 at 11.57.31 AM (4).jpeg','WhatsApp Image 2026-05-02 at 11.57.31 AM (5).jpeg','WhatsApp Image 2026-05-02 at 11.57.31 AM.jpeg',
+    'WhatsApp Image 2026-05-02 at 11.57.32 AM (1).jpeg','WhatsApp Image 2026-05-02 at 11.57.32 AM (2).jpeg','WhatsApp Image 2026-05-02 at 11.57.32 AM (3).jpeg',
+    'WhatsApp Image 2026-05-02 at 11.57.32 AM (4).jpeg','WhatsApp Image 2026-05-02 at 11.57.32 AM (5).jpeg','WhatsApp Image 2026-05-02 at 11.57.32 AM.jpeg',
+    'WhatsApp Image 2026-05-02 at 11.57.33 AM (1).jpeg','WhatsApp Image 2026-05-02 at 11.57.33 AM (2).jpeg','WhatsApp Image 2026-05-02 at 11.57.33 AM.jpeg',
+    'consu001.JPG','consu002.JPG','consu003.jpg',
+    'consu004.jpg','consu005.jpg','consu006.jpg',
+    'consu007.jpg','consu008.jpg','imagenagregar01.jpeg'
   ];
   let current = 0;
 
